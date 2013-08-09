@@ -24,19 +24,31 @@ public class ImageIOClient {
 		File srcFiles[] = srcDir.listFiles();
 		
 		for(File srcFile : srcFiles){
-			
+			System.out.println(srcFile.getName());
 			Socket sock = null;
 			
 			try{
 			sock = new Socket(ImageIOClient.SERVER_HOST, ImageIOClient.SERVER_PORT);
-			
+
 			InputStream is = sock.getInputStream();
 			OutputStream os = sock.getOutputStream();
 			
 			BufferedImage srcImg = ImageIO.read(srcFile);
 			
+			if(
+					srcImg.getType() == BufferedImage.TYPE_CUSTOM
+					||
+					srcImg.getType() == BufferedImage.TYPE_4BYTE_ABGR
+					||
+					srcImg.getType() == BufferedImage.TYPE_USHORT_GRAY
+					){
+				
+				System.out.println("対応してない");
+				continue;
+			}
+						
 			ImageIO.write(srcImg, "bmp", os);
-			
+						
 			}catch(Exception e){
 				e.printStackTrace();
 			}finally{
